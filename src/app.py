@@ -88,6 +88,25 @@ def get_activities():
     return activities
 
 
+@app.get("/activities/search")
+def search_activities(q: str = ""):
+    """Search activities by name or description"""
+    if not q:
+        return activities
+    
+    query = q.lower()
+    results = {}
+    
+    for name, details in activities.items():
+        # Search in activity name and description
+        if (query in name.lower() or 
+            query in details["description"].lower() or
+            query in details["schedule"].lower()):
+            results[name] = details
+    
+    return results
+
+
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
